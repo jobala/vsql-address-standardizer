@@ -14,13 +14,13 @@
 # along with this program; if not, see <https://www.gnu.org/licenses/>.
 
 cmake_minimum_required(VERSION 3.18)
-project(vsql_extension_template)
+project(vsql_address_standardizer)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Extension name
-set(EXTENSION_NAME "vsql_extension_template")
+set(EXTENSION_NAME "vsql_address_standardizer")
 
 # Find VillageSQL SDK
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

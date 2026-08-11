@@ -1,0 +1,18 @@
+Language: Cpp
+BasedOnStyle: LLVM
+
+AlwaysBreakTemplateDeclarations: Yes
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  BeforeElse: true
+  IndentBraces: false
+  AfterCaseLabel: true
+
+IndentWidth: 2
+ColumnLimit: 120

@@ -1,0 +1,22 @@
+input 
+SELECT address_standardize('100 main st apt 4, springfield il 62704');
+-- '100 MAIN ST APT 4, SPRINGFIELD, IL 62704'
+
+SELECT address_parse_json('100 main st, springfield il 62704');
+-- {"house_num":"100","street":"MAIN","suffix":"ST","city":"SPRINGFIELD","state":"IL","postcode":"62704"}
+
+Canonicalizes case, spacing, and suffix forms (Street → ST,
+Avenue → AVE, Apartment → APT).
+Maps state names to two-letter USPS abbreviations.
+Returns parsed components as a JSON object, or individual fields
+by name.
+Ships static USPS suffix and state abbreviation tables — no
+network calls, no external data files at runtime.
+US-only for v0.0.1; international forms are out of scope.
+
+house_num -> 100 
+street -> MAIN 
+suffix -> ST APT 4, 
+city -> SPRINGFIELD,
+state -> IL 
+zip -> 62704

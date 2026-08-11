@@ -19,6 +19,8 @@ project(vsql_address_standardizer)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+enable_testing()
+
 # Extension name
 set(EXTENSION_NAME "vsql_address_standardizer")
 
@@ -29,19 +31,18 @@ find_package(VillageSQL REQUIRED)
 message(STATUS "VillageSQL SDK found at: ${VillageSQL_PREFIX}")
 message(STATUS "VillageSQL include dir: ${VillageSQL_INCLUDE_DIR}")
 
-# Create the hello world shared library
-add_library(hello SHARED
-    src/hello.cc
-)
 
-# Include directories
-target_include_directories(hello PRIVATE
+add_library(address_standardizer SHARED
+    src/main.cc
+)
+target_include_directories(address_standardizer PRIVATE
     ${VillageSQLExtensionFramework_INCLUDE_DIR}
 )
 
-# Create the VEB package
+add_subdirectory(test)
+
 VEF_CREATE_VEB(
     NAME ${EXTENSION_NAME}
-    LIBRARY_TARGET hello
+    LIBRARY_TARGET address_standardizer
     MANIFEST ${CMAKE_CURRENT_SOURCE_DIR}/manifest.json
 )

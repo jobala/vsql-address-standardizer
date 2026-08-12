@@ -35,8 +35,11 @@ message(STATUS "VillageSQL include dir: ${VillageSQL_INCLUDE_DIR}")
 
 add_library(address_standardizer SHARED
     src/main.cc
+    src/address_standardizer.cc
 )
-target_include_directories(address_standardizer PRIVATE
+
+target_include_directories(address_standardizer PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${VillageSQLExtensionFramework_INCLUDE_DIR}
 )
 

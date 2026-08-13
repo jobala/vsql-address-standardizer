@@ -1,7 +1,10 @@
 #pragma once
 
 #include <optional>
+#include <ostream>
 #include <string>
+#include <string_view>
+#include <vector>
 
 namespace vsql_addr_std
 {
@@ -38,8 +41,17 @@ struct address
 
 struct token
 {
+  bool operator==(const token &other) const { return text == other.text && comma_after == other.comma_after; }
+
   std::string text;
   bool comma_after;
 };
 
+std::vector<token> tokenise(std::string_view address);
+
+// used by gtest for string output
+inline void PrintTo(const token &t, std::ostream *os)
+{
+  *os << "token{text: \"" << t.text << "\", comma_after: " << t.comma_after << "}";
+}
 } // namespace vsql_addr_std

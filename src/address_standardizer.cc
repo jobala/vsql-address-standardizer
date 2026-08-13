@@ -1,13 +1,12 @@
-#pragma once
-
-#include "address_standardizer.h"
-#include "us.h"
 #include <cctype>
 #include <optional>
 #include <string_view>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
+#include "address_standardizer.h"
+#include "us.h"
 
 namespace vsql_addr_std
 {
@@ -32,7 +31,7 @@ std::optional<std::string> lookup(const std::unordered_map<std::string, std::str
   return iter->second;
 }
 
-std::vector<token> tokenize(std::string_view address)
+std::vector<token> tokenise(std::string_view address)
 {
   std::vector<token> res;
   std::string curr;
@@ -86,11 +85,9 @@ std::vector<token> tokenize(std::string_view address)
         continue;
       }
     }
-    flush();
-
-    return res
   }
 
+  flush();
   return res;
 }
 } // namespace vsql_addr_std

@@ -2,12 +2,13 @@
 
 #include <optional>
 #include <string>
-#include <string_view>
 
 namespace vsql_addr_std
 {
 struct delivery_line
 {
+  bool empty();
+
   std::string house_number;
   std::string street_name;
   std::string street_suffix;
@@ -20,6 +21,8 @@ struct delivery_line
 
 struct last_line
 {
+  bool empty();
+
   std::string city;
   std::string state;
   std::string zip;
@@ -27,12 +30,16 @@ struct last_line
 
 struct address
 {
+  bool empty();
+
   delivery_line line1;
   last_line line2;
 };
 
-struct address_standardizer
+struct token
 {
-  address parse(std::string_view place);
+  std::string text;
+  bool comma_after;
 };
+
 } // namespace vsql_addr_std

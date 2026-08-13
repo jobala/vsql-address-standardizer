@@ -20,3 +20,35 @@ suffix -> ST APT 4,
 city -> SPRINGFIELD,
 state -> IL 
 zip -> 62704
+
+100 main st apt 4 address line 
+
+last line begins with city
+springfield il 62704 last line 
+
+after house number parse street name until st suffix
+after st name we might find a post directional, secondary_address_id & secondary address
+if neither it must be a city followed by state then zip.
+
+token = look_ahead()
+
+if token in suffix
+    street_name
+
+address
+    delivery_line
+    last_line
+
+delivery_line:
+    house_num
+    [predirectional]
+    street_name
+    [street suffix]
+    [post directional]
+    [secondary address identifier]
+    [seconadry address]
+
+last_line:
+    city
+    state
+    zip

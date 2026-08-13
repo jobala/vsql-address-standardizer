@@ -2,17 +2,18 @@
 
 #include <map>
 #include <string>
+#include <unordered_map>
 
 namespace vsql_addr_std
 {
 
-static const std::map<std::string, std::string> directional{
+static const std::unordered_map<std::string, std::string> directional{
     {"N", "N"},   {"NORTH", "N"},      {"S", "S"},   {"SOUTH", "S"},      {"E", "E"},   {"EAST", "E"},
     {"W", "W"},   {"WEST", "W"},       {"NE", "NE"}, {"NORTHEAST", "NE"}, {"NW", "NW"}, {"NORTHWEST", "NW"},
     {"SE", "SE"}, {"SOUTHEAST", "SE"}, {"SW", "SW"}, {"SOUTHWEST", "SW"},
 };
 
-static const std::unordered_map<std::string, std::string> secondary_addr{
+static const std::unordered_map<std::string, std::string> unit{
     {"APARTMENT", "APT"}, {"APT", "APT"},         {"BASEMENT", "BSMT"}, {"BSMT", "BSMT"}, {"BUILDING", "BLDG"},
     {"BLDG", "BLDG"},     {"DEPARTMENT", "DEPT"}, {"DEPT", "DEPT"},     {"FLOOR", "FL"},  {"FL", "FL"},
     {"FRONT", "FRNT"},    {"FRNT", "FRNT"},       {"HANGAR", "HNGR"},   {"HNGR", "HNGR"}, {"LOBBY", "LBBY"},
@@ -23,7 +24,7 @@ static const std::unordered_map<std::string, std::string> secondary_addr{
     {"TRLR", "TRLR"},     {"UNIT", "UNIT"},       {"UPPER", "UPPR"},    {"UPPR", "UPPR"}, {"#", "#"},
 };
 
-static const std::map<std::string, std::string> suffix_map = {
+static const std::unordered_map<std::string, std::string> suffix = {
     {"ALLEE", "ALY"},       {"ALLEY", "ALY"},       {"ALLY", "ALY"},      {"ALY", "ALY"},        {"ANEX", "ANX"},
     {"ANX", "ANX"},         {"ARC", "ARC"},         {"ARCADE", "ARC"},    {"AV", "AVE"},         {"AVE", "AVE"},
     {"AVEN", "AVE"},        {"AVENU", "AVE"},       {"AVENUE", "AVE"},    {"AVN", "AVE"},        {"AVNUE", "AVE"},
@@ -104,7 +105,7 @@ static const std::map<std::string, std::string> suffix_map = {
     {"WLS", "WLS"},         {"WELLS", "WLS"},
 };
 
-static const std::map<std::string, std::string> state_abbv = {
+static const std::unordered_map<std::string, std::string> states = {
     {"ALABAMA", "AL"},
     {"AL", "AL"},
     {"ALASKA", "AK"},

@@ -43,3 +43,15 @@ TEST(address_standardizer, parse_last_line_with_zip_ext)
 
   ASSERT_EQ(ll, expected);
 }
+
+TEST(address_standardizer, parse_last_line_with_multiword_state)
+{
+  std::string addr1 = "123 main st apt 4, springfield new york 62704-1234";
+  vsql_addr_std::last_line ll;
+
+  auto tokens = tokenise(addr1);
+  parse_last_line(tokens, &ll);
+  last_line expected{.city = "SPRINGFIELD", .state = "NY", .zip = "62704", .ext = "1234"};
+
+  ASSERT_EQ(ll, expected);
+}

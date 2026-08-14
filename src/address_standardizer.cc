@@ -235,15 +235,15 @@ void parse_delivery_line(const std::vector<token> &tokens, size_t end, delivery_
   if (unit_at < end)
   {
     auto res = lookup(unit, tokens[unit_at].text);
-    dl->secondary_address_id = res.value();
+    dl->unit_designator = res.value();
 
     size_t i = unit_at + 1;
-    if (dl->secondary_address_id != "#" && i < end && tokens[i].text == "#")
+    if (dl->unit_identifier != "#" && i < end && tokens[i].text == "#")
       ++i;
 
     if (i < end && standalone.count(tokens[i].text) == 0)
     {
-      dl->secondary_address = tokens[i].text;
+      dl->unit_identifier = tokens[i].text;
       i++;
     }
 

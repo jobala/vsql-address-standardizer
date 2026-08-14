@@ -15,8 +15,8 @@ struct delivery_line
   {
     return house_number == other.house_number && street_name == other.street_name &&
            street_suffix == other.street_suffix && pre_directional == other.pre_directional &&
-           post_directional == other.post_directional && secondary_address == other.secondary_address &&
-           secondary_address_id == other.secondary_address_id;
+           post_directional == other.post_directional && unit_identifier == other.unit_identifier &&
+           unit_designator == other.unit_designator;
   }
 
   std::string house_number;
@@ -25,8 +25,8 @@ struct delivery_line
 
   std::optional<std::string> pre_directional;
   std::optional<std::string> post_directional;
-  std::optional<std::string> secondary_address_id;
-  std::optional<std::string> secondary_address;
+  std::optional<std::string> unit_designator;
+  std::optional<std::string> unit_identifier;
 };
 
 struct last_line
@@ -77,7 +77,7 @@ inline void PrintTo(const delivery_line &dl, std::ostream *os)
 {
   *os << "delivery_line{house_number: \"" << dl.house_number << "\", street_name: " << dl.street_name
       << "\", street_suffix: " << dl.street_suffix << "\", pre_directional: " << *dl.pre_directional
-      << "\", post_directional: " << *dl.post_directional << "\", secondary_address_id: " << *dl.secondary_address_id
-      << "\", secondary_address: " << *dl.secondary_address << "}";
+      << "\", post_directional: " << *dl.post_directional << "\", unit_designator: " << *dl.unit_designator
+      << "\", unit_identifier: " << *dl.unit_identifier << "}";
 }
 } // namespace vsql_addr_std

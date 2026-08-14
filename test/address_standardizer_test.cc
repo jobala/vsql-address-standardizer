@@ -69,12 +69,12 @@ TEST(address_standardizer, delivery_line)
   parse_delivery_line(tokens, delivery_line_end, &dl);
 
   delivery_line expected{.house_number = "123",
-                         .street_name = "MAIN",
+                         .street_name = "MAIN BURLINGTON",
                          .street_suffix = "ST",
                          .pre_directional = "N",
                          .post_directional = "S",
-                         .secondary_address_id = "APT",
-                         .secondary_address = "4"};
+                         .unit_designator = "APT",
+                         .unit_identifier = "4"};
 
   ASSERT_EQ(dl, expected);
 }

@@ -1,0 +1,95 @@
+input 
+SELECT address_standardize('100 main st apt 4, springfield il 62704');
+-- '100 MAIN ST APT 4, SPRINGFIELD, IL 62704'
+
+SELECT address_parse_json('100 main st, springfield il 62704');
+-- {"house_num":"100","street":"MAIN","suffix":"ST","city":"SPRINGFIELD","state":"IL","postcode":"62704"}
+
+Canonicalizes case, spacing, and suffix forms (Street → ST,
+Avenue → AVE, Apartment → APT).
+Maps state names to two-letter USPS abbreviations.
+Returns parsed components as a JSON object, or individual fields
+by name.
+Ships static USPS suffix and state abbreviation tables — no
+network calls, no external data files at runtime.
+US-only for v0.0.1; international forms are out of scope.
+
+house_num -> 100 
+street -> MAIN 
+suffix -> ST APT 4, 
+city -> SPRINGFIELD,
+state -> IL 
+zip -> 62704
+
+100 main st apt 4 address line 
+
+last line begins with city
+springfield il 62704 last line 
+
+after house number parse street name until st suffix
+after st name we might find a post directional, secondary_address_id & secondary address
+if neither it must be a city followed by state then zip.
+
+token = look_ahead()
+
+if token in suffix
+    street_name
+
+address
+    delivery_line
+    last_line
+
+delivery_line:
+    house_num
+    [predirectional]
+    street_name
+    [street suffix]
+    [post directional]
+    [secondary address identifier]
+    [seconadry address]
+
+
+last_line:
+    city
+    state
+    zip
+
+::note When parsing the Delivery Address Line into the individual components, start from the right–most element of the address and work toward the left. 
+
+::note Exceptions are any combinations of NORTH-SOUTH or EAST–WEST as consecutive words. In these cases the second directional becomes part of the street name and is spelled out completely in the street name field.
+
+::note When parsing from right to left, if the directional word appears between the street name and the suffix, then it appears as part of the street name spelled out in the ZIP+4 file and is spelled out on the mailpiece.
+
+::note If an address has two consecutive words that appear on the suffix table (Appendix C), abbreviate the second of the two words according to the suffix table and place it in the suffix field. The first of the two words is part of the street name. Spell it out on the mailpiece in its entirety after the street name.
+
+address ::= deliver_line  last_line
+
+delivery_line ::= house_num 
+    [pre_directional]
+    street_name
+    [street_suffix] // this becomes part of the street name
+    [street_suffix]
+    [consecutive_directional] // this become part of street name
+    [post_directional]
+    [address_unit]
+
+street_name ::= [consecutive_directional]
+    word 
+    [directional]
+
+pre_directional ::= directional {directional} 
+post_directional ::= directional {directional}
+two_directional ::= directional directional
+address_unit ::= unit_designator unit_identifier
+
+
+<directional> := directionals
+<street_suffix> := suffixes
+<secondary_address> := alphanumeric
+
+
+last_line ::= city state zip
+
+<city> := word {word}
+<state> := states
+<zip>  := zip5 [ "-" zip4 ]

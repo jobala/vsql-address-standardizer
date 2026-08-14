@@ -58,9 +58,9 @@ TEST(address_standardizer, parse_last_line_with_multiword_state)
   ASSERT_EQ(ll, expected);
 }
 
-TEST(address_standardizer, parse_basic_delivery_line)
+TEST(address_standardizer, delivery_line)
 {
-  std::string addr1 = "123 main st apt 4, springfield new york 62704-1234";
+  std::string addr1 = "123 north main burlington st south apt 4 , springfield new york 62704-1234";
   last_line ll;
   delivery_line dl;
 
@@ -71,6 +71,8 @@ TEST(address_standardizer, parse_basic_delivery_line)
   delivery_line expected{.house_number = "123",
                          .street_name = "MAIN",
                          .street_suffix = "ST",
+                         .pre_directional = "N",
+                         .post_directional = "S",
                          .secondary_address_id = "APT",
                          .secondary_address = "4"};
 

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace vsql_addr_std
 {
@@ -22,6 +23,9 @@ static const std::unordered_map<std::string, std::string> unit{
     {"SPC", "SPC"},       {"STOP", "STOP"},       {"SUITE", "STE"},     {"STE", "STE"},   {"TRAILER", "TRLR"},
     {"TRLR", "TRLR"},     {"UNIT", "UNIT"},       {"UPPER", "UPPR"},    {"UPPR", "UPPR"}, {"#", "#"},
 };
+
+static const std::unordered_set<std::string> standalone{"BSMT", "FRNT", "LBBY", "LOWR", "OFC",
+                                                        "PH",   "REAR", "SIDE", "UPPR"};
 
 static const std::unordered_map<std::string, std::string> suffix = {
     {"ALLEE", "ALY"},       {"ALLEY", "ALY"},       {"ALLY", "ALY"},      {"ALY", "ALY"},        {"ANEX", "ANX"},

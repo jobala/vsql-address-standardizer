@@ -196,4 +196,91 @@ size_t parse_last_line(const std::vector<token> &tokens, last_line *ll)
 
   return city_start;
 }
+
+void parse_delivery_line(const std::vector<token> &tokens, size_t end, delivery_line *dl)
+{
+  size_t i = 0;
+  if (end == 0)
+    return;
+
+  if (end - i > 1)
+  {
+    dl->house_number = tokens[i].text;
+    ++i;
+  }
+
+  auto direction = lookup(directional, tokens[i].text);
+  if (i < end && direction.has_value() && end - i > 1)
+  {
+    dl->pre_directional = direction;
+    ++i;
+  }
+
+  size_t unit_at = end;
+  for (size_t k = i; k < end; ++k)
+  {
+    if (k == i)
+      continue;
+
+    auto res = lookup(unit, tokens[k].text);
+    if (res.has_value())
+    {
+      unit_at = k;
+      break;
+    }
+  }
+
+  size_t street_end = unit_at;
+
+  if (unit_at < end)
+  {
+    auto res = lookup(unit, tokens[unit_at].text);
+    dl->secondary_address_id = res.value();
+
+    size_t i = unit_at + 1;
+    if (dl->secondary_address_id != "#" && i < end && tokens[i].text == "#")
+      ++i;
+
+    if (i < end && standalone.count(tokens[i].text) == 0)
+    {
+      dl->secondary_address = tokens[i].text;
+      i++;
+    }
+
+    if (i < end)
+    {
+      // todo: warn, tokens after secondary address ignored
+    }
+  }
+
+  auto res = lookup(directional, tokens[street_end - 1].text);
+  if (street_end - 1 >= 2 && res.has_value())
+  {
+    dl->post_directional = res.value();
+    --street_end;
+  }
+
+  auto sufx = lookup(suffix, tokens[street_end - 1].text);
+  if (street_end - 1 >= 2 && sufx.has_value())
+  {
+    dl->street_suffix = sufx.value();
+    --street_end;
+  }
+
+  for (size_t k = i; k < street_end; ++k)
+  {
+    if (!dl->street_name.empty())
+      dl->street_name.push_back(' ');
+
+    dl->street_name += tokens[k].text;
+  }
+
+  if (dl->street_name.empty() && !dl->street_suffix.empty())
+  {
+    dl->street_name = dl->street_suffix;
+    dl->street_suffix.clear();
+    // todo add warning
+    // street name is also a suffix word
+  }
+}
 } // namespace vsql_addr_std

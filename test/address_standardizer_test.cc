@@ -3,6 +3,7 @@
 
 #include "address_standardizer.h"
 
+using vsql_addr_std::address;
 using vsql_addr_std::delivery_line;
 using vsql_addr_std::last_line;
 using vsql_addr_std::parse_delivery_line;
@@ -77,4 +78,38 @@ TEST(address_standardizer, delivery_line)
                          .unit_identifier = "4"};
 
   ASSERT_EQ(dl, expected);
+}
+
+TEST(address_standardizer, string_address)
+{
+  std::string addr1 = "123 north main burlington st south apt 4 , springfield new york 62704-1234";
+  last_line ll;
+  delivery_line dl;
+
+  auto tokens = tokenise(addr1);
+  auto delivery_line_end = parse_last_line(tokens, &ll);
+  parse_delivery_line(tokens, delivery_line_end, &dl);
+  address addr{dl, ll};
+
+  std::string expected = "123 N MAIN BURLINGTON ST S APT 4, SPRINGFIELD NY 62704-1234";
+  ASSERT_EQ(addr.to_string(), expected);
+}
+
+TEST(address_standardizer, json_address)
+{
+  std::string addr1 = "123 north main burlington st south apt 4 , springfield new york 62704-1234";
+  last_line ll;
+  delivery_line dl;
+
+  auto tokens = tokenise(addr1);
+  auto delivery_line_end = parse_last_line(tokens, &ll);
+  parse_delivery_line(tokens, delivery_line_end, &dl);
+  address addr{dl, ll};
+
+  std::string expected =
+      "{\"house_number\":\"123\", \"pre_directional\":\"N\", \"street_name\":\"MAIN BURLINGTON\", "
+      "\"street_suffix\":\"ST\", \"post_directional\":\"S\", \"unit_designator\":\"APT\", \"unit_identifier\":\"4\", "
+      "SPRINGFIELD NY 62704\"city\":\"SPRINGFIELD \", \"state\":\"NY \", \"zip\":\"62704-1234\"}";
+
+  ASSERT_EQ(addr.to_json(), expected);
 }

@@ -45,6 +45,9 @@ struct last_line
 
 struct address
 {
+  std::string to_string();
+  std::string to_json();
+
   delivery_line line1;
   last_line line2;
 };

@@ -283,4 +283,74 @@ void parse_delivery_line(const std::vector<token> &tokens, size_t end, delivery_
     // street name is also a suffix word
   }
 }
+
+std::string address::to_string()
+{
+  std::string res;
+  res += line1.house_number += " ";
+
+  if (line1.pre_directional.has_value())
+    res += line1.pre_directional.value() += " ";
+
+  res += line1.street_name += " ";
+  res += line1.street_suffix += " ";
+
+  if (line1.post_directional.has_value())
+    res += line1.post_directional.value() + " ";
+
+  if (line1.unit_designator.has_value())
+    res += line1.unit_designator.value() + " ";
+
+  if (line1.unit_identifier.has_value())
+    res += line1.unit_identifier.value() + " ";
+
+  res.erase(res.length() - 1);
+  res += ", ";
+
+  res += line2.city += " ";
+  res += line2.state += " ";
+  res += line2.zip;
+
+  if (line2.ext.has_value())
+    res += "-" + line2.ext.value();
+
+  return res;
+}
+
+std::string address::to_json()
+{
+  std::string res = "{";
+  res += R"("house_number":")" + line1.house_number + R"(", )";
+
+  if (line1.pre_directional.has_value())
+    res += R"("pre_directional":")" + line1.pre_directional.value() + R"(", )";
+
+  res += R"("street_name":")" + line1.street_name + R"(", )";
+  res += R"("street_suffix":")" + line1.street_suffix + R"(", )";
+
+  if (line1.post_directional.has_value())
+    res += R"("post_directional":")" + line1.post_directional.value() + R"(", )";
+
+  if (line1.unit_designator.has_value())
+    res += R"("unit_designator":")" + line1.unit_designator.value() + R"(", )";
+
+  if (line1.unit_identifier.has_value())
+    res += R"("unit_identifier":")" + line1.unit_identifier.value() + R"(", )";
+
+  res += line2.city += " ";
+  res += line2.state += " ";
+  res += line2.zip;
+
+  res += R"("city":")" + line2.city + R"(", )";
+  res += R"("state":")" + line2.state + R"(", )";
+  res += R"("zip":")" + line2.zip;
+
+  if (line2.ext.has_value())
+    res += "-" + line2.ext.value();
+
+  res += R"(")";
+  res += "}";
+
+  return res;
+}
 } // namespace vsql_addr_std

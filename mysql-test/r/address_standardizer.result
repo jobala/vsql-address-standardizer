@@ -1,0 +1,38 @@
+INSTALL EXTENSION vsql_address_standardizer;
+#
+# address_standardize on representative inputs
+#
+SELECT address_standardize('123 Main St, Springfield Illinois 62704') AS standardized_simple;
+standardized_simple
+123 MAIN ST, SPRINGFIELD IL 62704
+SELECT address_standardize('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234') AS standardized_complex;
+standardized_complex
+123 N MAIN BURLINGTON ST S APT 4, SPRINGFIELD NY 62704-1234
+#
+# address_parse_json returns the structured address string
+#
+SELECT address_parse_json('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234') AS parsed_json;
+parsed_json
+{"house_number":"123", "pre_directional":"N", "street_name":"MAIN BURLINGTON", "street_suffix":"ST", "post_directional":"S", "unit_designator":"APT", "unit_identifier":"4", "city":"SPRINGFIELD", "state":"NY", "zip":"62704-1234"}
+#
+# address_field is case-insensitive and handles missing values
+#
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', 'STATE') AS state_value;
+state_value
+NY
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', 'ext') AS zip_extension;
+zip_extension
+1234
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', 'missing') AS missing_field;
+missing_field
+NULL
+SELECT address_field(NULL, 'state') AS null_address;
+null_address
+NULL
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', NULL) AS null_field;
+null_field
+NULL
+#
+# Cleanup
+#
+UNINSTALL EXTENSION vsql_address_standardizer;

@@ -1,0 +1,30 @@
+INSTALL EXTENSION vsql_address_standardizer;
+
+--echo #
+--echo # address_standardize on representative inputs
+--echo #
+
+SELECT address_standardize('123 Main St, Springfield Illinois 62704') AS standardized_simple;
+SELECT address_standardize('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234') AS standardized_complex;
+
+--echo #
+--echo # address_parse_json returns the structured address string
+--echo #
+
+SELECT address_parse_json('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234') AS parsed_json;
+
+--echo #
+--echo # address_field is case-insensitive and handles missing values
+--echo #
+
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', 'STATE') AS state_value;
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', 'ext') AS zip_extension;
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', 'missing') AS missing_field;
+SELECT address_field(NULL, 'state') AS null_address;
+SELECT address_field('123 North Main Burlington St South Apt 4, Springfield New York 62704-1234', NULL) AS null_field;
+
+--echo #
+--echo # Cleanup
+--echo #
+
+UNINSTALL EXTENSION vsql_address_standardizer;

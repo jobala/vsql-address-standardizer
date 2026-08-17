@@ -17,7 +17,7 @@ install extension vsql_address_standardizer
 select address_standardize("123 north main burlington st south apt 4, springfield new york 62704-1234");
 
 
-123 N MAIN BURLINGTON ST S APT 4, SPRINGFIELD NY 62704-1234
+-- 123 N MAIN BURLINGTON ST S APT 4, SPRINGFIELD NY 62704-1234
 ```
 
 ### address_parse_json

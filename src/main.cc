@@ -14,19 +14,76 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "address_standardizer.h"
+#include "villagesql/vsql/func_types.h"
 #include <villagesql/vsql.h>
 
 #include <cstring>
 
+using namespace vsql_addr_std;
 using namespace vsql;
 
-void hello_world_impl(StringResult out)
+address parse_address(std::string_view address)
 {
-  const char *hello = "Hello, World!";
-  auto buf = out.buffer();
-  memcpy(buf.data(), hello, strlen(hello));
-  out.set_length(strlen(hello));
+  delivery_line dl;
+  last_line ll;
+
+  auto tokens = tokenise(address);
+  auto delivery_line_end = parse_last_line(tokens, &ll);
+  parse_delivery_line(tokens, delivery_line_end, &dl);
+
+  return {dl, ll};
 }
 
-VEF_GENERATE_ENTRY_POINTS(make_extension().func(
-    make_func<&hello_world_impl>("hello_world").returns(STRING).no_params().buffer_size(14).build()))
+void address_standardize_impl(StringArg address, StringResult out)
+{
+  if (address.is_null())
+  {
+    out.set_null();
+    return;
+  }
+
+  auto addr = parse_address(address.value()).to_string();
+  auto needed = addr.size();
+
+  if (needed > out.buffer().size())
+  {
+    out.set_length(needed);
+    return;
+  }
+
+  out.set_length(needed);
+  out.set(addr);
+}
+
+void address_parse_json_impl(StringArg address, StringResult out)
+{
+  if (address.is_null())
+  {
+    out.set_null();
+    return;
+  }
+
+  auto addr = parse_address(address.value()).to_json();
+  auto needed = addr.size();
+
+  if (needed > out.buffer().size())
+  {
+    out.set_length(needed);
+    return;
+  }
+
+  out.set(addr);
+}
+
+VEF_GENERATE_ENTRY_POINTS(make_extension()
+                              .func(make_func<&address_standardize_impl>("address_standardize")
+                                        .returns(STRING)
+                                        .param(STRING)
+                                        .deterministic()
+                                        .build())
+                              .func(make_func<&address_parse_json_impl>("address_parse_json")
+                                        .returns(STRING)
+                                        .param(STRING)
+                                        .deterministic()
+                                        .build()))

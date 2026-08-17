@@ -349,4 +349,36 @@ std::string address::to_json()
 
   return res;
 }
+
+std::unordered_map<std::string, std::string> address::to_map()
+{
+  std::unordered_map<std::string, std::string> res;
+
+  res.insert({"house_number", line1.house_number});
+
+  if (line1.pre_directional.has_value())
+    res.insert({"pre_directional", line1.pre_directional.value()});
+
+  res.insert({"street_name", line1.street_name});
+  res.insert({"street_suffix", line1.street_suffix});
+
+  if (line1.post_directional.has_value())
+    res.insert({"post_directional", line1.post_directional.value()});
+
+  if (line1.unit_designator.has_value())
+    res.insert({"unit_designator", line1.unit_designator.value()});
+
+  if (line1.unit_identifier.has_value())
+    res.insert({"unit_identifier", line1.unit_identifier.value()});
+
+  res.insert({"city", line2.city});
+  res.insert({"state", line2.state});
+  res.insert({"zip", line2.zip});
+
+  if (line2.ext.has_value())
+    res.insert({"ext", line2.ext.value()});
+
+  return res;
+}
+
 } // namespace vsql_addr_std

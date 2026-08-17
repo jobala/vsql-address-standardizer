@@ -16,6 +16,7 @@
 
 #include "address_standardizer.h"
 #include "villagesql/vsql/func_types.h"
+#include <string>
 #include <villagesql/vsql.h>
 
 #include <cstring>
@@ -76,6 +77,38 @@ void address_parse_json_impl(StringArg address, StringResult out)
   out.set(addr);
 }
 
+void address_field_impl(StringArg address, StringArg field, StringResult out)
+{
+  if (address.is_null() || field.is_null())
+  {
+    out.set_null();
+    return;
+  }
+
+  auto field_arg = std::string(field.value());
+  std::transform(field_arg.begin(), field_arg.end(), field_arg.begin(),
+                 [](unsigned char c) { return std::tolower(c); });
+
+  auto addr = parse_address(address.value()).to_map();
+  auto iter = addr.find(field_arg);
+  if (iter == addr.end())
+  {
+    out.set_null();
+    return;
+  }
+  auto field_value = iter->second;
+
+  auto needed = field_value.size();
+
+  if (needed > out.buffer().size())
+  {
+    out.set_length(needed);
+    return;
+  }
+
+  out.set(field_value);
+}
+
 VEF_GENERATE_ENTRY_POINTS(make_extension()
                               .func(make_func<&address_standardize_impl>("address_standardize")
                                         .returns(STRING)
@@ -84,6 +117,12 @@ VEF_GENERATE_ENTRY_POINTS(make_extension()
                                         .build())
                               .func(make_func<&address_parse_json_impl>("address_parse_json")
                                         .returns(STRING)
+                                        .param(STRING)
+                                        .deterministic()
+                                        .build())
+                              .func(make_func<&address_field_impl>("address_field")
+                                        .returns(STRING)
+                                        .param(STRING)
                                         .param(STRING)
                                         .deterministic()
                                         .build()))

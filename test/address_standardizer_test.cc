@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <unordered_map>
 #include <vector>
 
 #include "address_standardizer.h"
@@ -109,7 +110,27 @@ TEST(address_standardizer, json_address)
   std::string expected =
       "{\"house_number\":\"123\", \"pre_directional\":\"N\", \"street_name\":\"MAIN BURLINGTON\", "
       "\"street_suffix\":\"ST\", \"post_directional\":\"S\", \"unit_designator\":\"APT\", \"unit_identifier\":\"4\", "
-      "\"city\":\"SPRINGFIELD \", \"state\":\"NY \", \"zip\":\"62704-1234\"}";
+      "\"city\":\"SPRINGFIELD\", \"state\":\"NY\", \"zip\":\"62704-1234\"}";
 
   ASSERT_EQ(addr.to_json(), expected);
+}
+
+TEST(address_standardizer, map_address)
+{
+  std::string addr1 = "123 north main burlington st south apt 4 , springfield new york 62704-1234";
+  last_line ll;
+  delivery_line dl;
+
+  auto tokens = tokenise(addr1);
+  auto delivery_line_end = parse_last_line(tokens, &ll);
+  parse_delivery_line(tokens, delivery_line_end, &dl);
+  address addr{dl, ll};
+
+  std::unordered_map<std::string, std::string> expected{
+      {"house_number", "123"},  {"pre_directional", "N"},  {"street_name", "MAIN BURLINGTON"},
+      {"street_suffix", "ST"},  {"post_directional", "S"}, {"unit_designator", "APT"},
+      {"unit_identifier", "4"}, {"city", "SPRINGFIELD"},   {"state", "NY"},
+      {"zip", "62704"},         {"ext", "1234"},
+  };
+  ASSERT_EQ(addr.to_map(), expected);
 }

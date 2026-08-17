@@ -1,9 +1,11 @@
 #pragma once
 
+#include <map>
 #include <optional>
 #include <ostream>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 namespace vsql_addr_std
@@ -47,6 +49,7 @@ struct address
 {
   std::string to_string();
   std::string to_json();
+  std::unordered_map<std::string, std::string> to_map();
 
   delivery_line line1;
   last_line line2;

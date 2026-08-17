@@ -109,7 +109,7 @@ TEST(address_standardizer, json_address)
   std::string expected =
       "{\"house_number\":\"123\", \"pre_directional\":\"N\", \"street_name\":\"MAIN BURLINGTON\", "
       "\"street_suffix\":\"ST\", \"post_directional\":\"S\", \"unit_designator\":\"APT\", \"unit_identifier\":\"4\", "
-      "SPRINGFIELD NY 62704\"city\":\"SPRINGFIELD \", \"state\":\"NY \", \"zip\":\"62704-1234\"}";
+      "\"city\":\"SPRINGFIELD \", \"state\":\"NY \", \"zip\":\"62704-1234\"}";
 
   ASSERT_EQ(addr.to_json(), expected);
 }

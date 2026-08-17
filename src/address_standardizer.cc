@@ -337,10 +337,6 @@ std::string address::to_json()
   if (line1.unit_identifier.has_value())
     res += R"("unit_identifier":")" + line1.unit_identifier.value() + R"(", )";
 
-  res += line2.city += " ";
-  res += line2.state += " ";
-  res += line2.zip;
-
   res += R"("city":")" + line2.city + R"(", )";
   res += R"("state":")" + line2.state + R"(", )";
   res += R"("zip":")" + line2.zip;
